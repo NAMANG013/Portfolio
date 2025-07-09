@@ -1,0 +1,620 @@
+ @import url('https://fonts.googleapis.com/css2?family=Huninn&family=Poiret+One&display=swap');
+
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+
+ html {
+     scroll-behavior: smooth;
+ }
+
+ body {
+     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     background-color: #000;
+     color: #fff;
+     line-height: 1.6;
+
+ }
+
+ .container {
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 0 2rem;
+ }
+
+ /* Header */
+ header {
+     margin: 0px 70px;
+     position: sticky;
+     top: 0;
+     z-index: 1000;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 2rem;
+ }
+
+ .logo {
+     border: 2px solid #a855f7;
+     font-size: 2rem;
+     padding: 0px 10px;
+     font-weight: bold;
+     color: #a855f7;
+ }
+
+ nav {
+     display: flex;
+     gap: 2rem;
+ }
+
+ nav a {
+     color: #9ca3af;
+     text-decoration: none;
+     font-weight: 500;
+     transition: color 0.3s ease;
+ }
+
+ nav a:hover,
+ nav a.active {
+     color: #a855f7;
+ }
+
+ /* Hero Section */
+ .hero {
+     padding: 5rem 2rem;
+ }
+
+ .hero h1 {
+     font-size: 6rem;
+     font-weight: 300;
+     line-height: 1.1;
+     max-width: 1200px;
+ }
+
+ .hero-1 {
+     font-family: "Poiret One", sans-serif;
+
+ }
+
+ .element {
+     font-family: "Huninn", sans-serif;
+     color: #a855f7;
+     font-weight: 500;
+ }
+
+ /* Clients Section */
+ .clients {
+     padding: 4rem 2rem;
+ }
+
+ .clients-intro {
+
+     margin-bottom: 3rem;
+ }
+
+ .clients-intro p {
+     text-align: center;
+     color: #9ca3af;
+     font-size: 1.5rem;
+ }
+
+ .clients-intro .highlight {
+     color: #fff;
+     font-weight: 500;
+ }
+
+ .clients-grid {
+     justify-content: center;
+     display: flex;
+     flex-wrap: wrap;
+     gap: 10rem;
+     align-items: center;
+     opacity: 0.7;
+ }
+
+ .client-logo {
+     font-size: 2.5rem;
+     font-weight: 500;
+ }
+
+ /* Works Section */
+ .works {
+     padding: 4rem 2rem;
+ }
+
+ .section-title {
+     margin-bottom: 4rem;
+ }
+
+ .section-title p {
+     color: #9ca3af;
+     font-size:2rem;
+ }
+
+ .section-title .highlight {
+     color: #fff;
+     font-weight: 500;
+ }
+
+ .work-item {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 3rem;
+     align-items: center;
+     margin-bottom: 4rem;
+ }
+
+ .work-item:nth-child(even) .work-image {
+     order: 2;
+ }
+
+ .work-item:nth-child(even) .work-content {
+     order: 1;
+ }
+
+ .work-image {
+     border-radius: 1.5rem;
+     padding: 2rem;
+     min-height: 300px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .work-image.real-estate {
+     background: url(/Ass/vastrasangar.png);
+     background-size: cover;
+ }
+
+ .work-image.plant-app {
+     background-color: #4ade80;
+ }
+
+ .work-image.smart-home {
+     background-color: #a855f7;
+ }
+
+ .work-image.logo-animation {
+     background-color: #fff;
+ }
+
+ .mockup {
+    background-image: url(images/vastrasangar.png);
+    display: none;
+
+     background: transparent;
+     border-radius: 1rem;
+     padding: 1.5rem;
+     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+     width: 200px;
+ }
+
+ .mockup-header {
+    display: none;
+     height: 100px;
+     background: linear-gradient(135deg, #60a5fa, #a855f7);
+     border-radius: 0.5rem;
+     margin-bottom: 1rem;
+ }
+
+ .mockup-grid {
+    display: none;
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 0.5rem;
+     margin-bottom: 1rem;
+ }
+
+ .mockup-item {
+     height: 40px;
+     background: #e5e7eb;
+     border-radius: 0.25rem;
+ }
+
+ .mockup-button {
+    display: none;
+     height: 30px;
+     background: #a855f7;
+     border-radius: 0.25rem;
+ }
+
+ .mobile-mockups {
+    display: none;
+     display: flex;
+     gap: 1rem;
+ }
+
+ .mobile-mockup {
+    display: none;
+     background: #fff;
+     border-radius: 1rem;
+     padding: 1rem;
+     width: 80px;
+     height: 140px;
+ }
+
+ .mobile-header {
+    display: none;
+     height: 40px;
+     border-radius: 0.5rem;
+     margin-bottom: 0.5rem;
+ }
+
+ .plant-app .mobile-header {
+     background: #bbf7d0;
+ }
+
+ .smart-home .mobile-mockup {
+     background: #1f2937;
+ }
+
+ .smart-home .mobile-header {
+     background: #a855f7;
+ }
+
+ .logo-display {
+    display: none;
+     font-size: 2.5rem;
+     font-weight: bold;
+     color: #a855f7;
+ }
+
+ .work-content h3 {
+     color: #a855f7;
+     font-size: 1.2rem;
+     font-weight: 500;
+     margin-bottom: 1rem;
+     letter-spacing: 0.1em;
+ }
+
+ .work-content p {
+     color: #9ca3af;
+     margin-bottom: 1.5rem;
+     line-height: 1.7;
+ }
+
+ .work-content .highlight {
+     color: #fff;
+ }
+
+ .btn {
+     display: inline-block;
+     padding: 0.75rem 1.5rem;
+     border: 1px solid #4b5563;
+     background: transparent;
+     color: #fff;
+     text-decoration: none;
+     border-radius: 0.5rem;
+     transition: all 0.3s ease;
+ }
+
+ .btn:hover {
+     background: #1f2937;
+     border-color: #6b7280;
+ }
+
+ .mor-1 {
+     display: grid;
+     justify-content: end;
+
+ }
+
+ .mor-btn {
+     display: inline-block;
+     color: rgb(255, 255, 255);
+     padding: 0.75rem 1.5rem;
+     border-width: 1px;
+     border-style: solid;
+     border-color: rgb(75, 85, 99);
+     border-image: initial;
+     background: transparent;
+     text-decoration: none;
+     border-radius: 0.5rem;
+ }
+
+ .mor-btn:hover {
+     background: #1f2937;
+     border-color: #6b7280;
+ }
+
+ /* About Section */
+ .about {
+     padding: 4rem 2rem;
+ }
+
+ .about-grid {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 3rem;
+     align-items: start;
+ }
+
+ .about-content h2 {
+     font-size: 1.8rem;
+     font-weight: 500;
+     margin-bottom: 1.5rem;
+ }
+
+ .about-content p {
+     color: #9ca3af;
+     line-height: 1.8;
+ }
+
+ .about-content .highlight {
+     color: #fff;
+ }
+
+ .btn-abt {
+     margin-top: 20px;
+     display: grid;
+     justify-content: start;
+ }
+
+ .about-btn {
+     display: inline-block;
+     color: rgb(255, 255, 255);
+     padding: 0.75rem 1.5rem;
+
+     border-width: 1px;
+     border-style: solid;
+     border-color: rgb(75, 85, 99);
+     border-image: initial;
+     background: transparent;
+     text-decoration: none;
+     border-radius: 0.5rem;
+ }
+
+ .about-btn:hover {
+     background: #1f2937;
+     border-color: #6b7280;
+ }
+
+ .photo-grid {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 1rem;
+ }
+
+ .photo-grid .col:last-child {
+     padding-top: 2rem;
+ }
+
+ .photo {
+     aspect-ratio: 1;
+     border-radius: 1rem;
+     margin-bottom: 1rem;
+ }
+
+ .photo:nth-child(1) {
+     background: linear-gradient(135deg, #f97316, #ef4444);
+ }
+
+ .photo:nth-child(2) {
+     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+ }
+
+ .photo:nth-child(3) {
+     background: linear-gradient(135deg, #10b981, #3b82f6);
+ }
+
+ .photo:nth-child(4) {
+     background: linear-gradient(135deg, #8b5cf6, #ec4899);
+ }
+
+ /* Contact Section */
+ .contact {
+     padding: 4rem 2rem;
+     text-align: center;
+ }
+
+ .contact h2 {
+     font-size: clamp(2.5rem, 6vw, 4rem);
+     font-weight: 300;
+     margin-bottom: 1rem;
+ }
+
+ .contact .highlight {
+     color: #a855f7;
+ }
+
+ .contact p {
+     color: #9ca3af;
+     margin-bottom: 2rem;
+ }
+
+ .contect-btn {
+     display: inline-block;
+     color: rgb(255, 255, 255);
+     padding: 0.75rem 1.5rem;
+
+     border-width: 1px;
+     border-style: solid;
+     border-color: rgb(75, 85, 99);
+     border-image: initial;
+     background: transparent;
+     text-decoration: none;
+     border-radius: 0.5rem;
+ }
+
+ .contect-btn:hover {
+     background: #1f2937;
+     border-color: #6b7280;
+ }
+
+ .rigts {
+     font-family: "Poiret One", sans-serif;
+     opacity: 50%;
+     font-size: small;
+     text-align: end;
+ }
+
+ /* Responsive Design */
+ @media (max-width:768px) {
+
+     .header {
+         margin: 0px 40px;
+         position: sticky;
+         top: 0;
+         z-index: 1000;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 2rem;
+     }
+
+     nav {
+         display: none;
+     }
+
+     .work-item {
+         grid-template-columns: 1fr;
+         text-align: center;
+     }
+
+     .work-item:nth-child(even) .work-image,
+     .work-item:nth-child(even) .work-content {
+         order: unset;
+     }
+
+     .about-grid {
+         grid-template-columns: 1fr;
+     }
+
+     .clients-grid {
+         gap: 20px;
+         justify-content: center;
+     }
+
+     .photo-grid .col:last-child {
+         padding-top: 0;
+     }
+ }
+
+ @media (max-width: 480px) {
+
+     .logo {
+         border: 2px solid #a855f7;
+         font-size: 1rem;
+         padding: 0px 6px;
+         font-weight: bold;
+         color: #a855f7;
+     }
+
+     .clients-intro {
+         margin-bottom: 2rem;
+     }
+
+     .client-logo {
+         font-size: 20px;
+         font-weight: 400;
+     }
+
+     .section-title p {
+         text-align: center;
+         color: #9ca3af;
+         font-size: 1.5rem;
+     }
+
+     .work-content p {
+         color: #ffffff;
+         margin-bottom: 1.5rem;
+         line-height: 1.7;
+     }
+
+     .about-content p {
+         text-align: center;
+         color: #9ca3af;
+         line-height: 1.8;
+     }
+
+     .rigts {
+         font-family: "Poiret One", sans-serif;
+         opacity: 50%;
+         font-size: xx-small;
+         text-align: center;
+
+
+     }
+
+     .btn-abt {
+         margin-top: 20px;
+         display: grid;
+         justify-content: space-around;
+     }
+
+     .btn {
+         font-size: x-small;
+         color: rgb(255, 255, 255);
+         padding: 0.55rem .5rem;
+         border-width: 1px;
+         border-style: solid;
+         border-color: rgb(75, 85, 99);
+         border-image: initial;
+         background: transparent;
+         text-decoration: none;
+         border-radius: 0.5rem;
+         border-radius: -0.5rem;
+
+     }
+
+     .about-btn {
+         font-size: x-small;
+         color: rgb(255, 255, 255);
+         padding: 0.55rem .5rem;
+         border-width: 1px;
+         border-style: solid;
+         border-color: rgb(75, 85, 99);
+         border-image: initial;
+         background: transparent;
+         text-decoration: none;
+         border-radius: 0.5rem;
+         border-radius: -0.5rem;
+     }
+
+     .about-content h2 {
+         text-align: center;
+         font-size: 1rem;
+         font-weight: 500;
+         margin-bottom: 1.5rem;
+     }
+
+     .clients-intro p {
+         text-align: center;
+         color: #9ca3af;
+         font-size: 1rem;
+     }
+
+     .element {
+         font-family: "Huninn", sans-serif;
+         color: #a855f7;
+         font-weight: 500;
+     }
+
+
+     .hero h1 {
+         font-size: 2rem;
+     }
+
+     .container {
+         padding: 0 1rem;
+     }
+
+     header {
+         padding: 1rem;
+         margin: 5px 16px;
+     }
+
+     .hero,
+     .clients,
+     .works,
+     .about,
+     .contact {
+         padding: 2rem 1rem;
+     }
+
+     .mobile-mockups {
+         justify-content: center;
+     }
+ }
