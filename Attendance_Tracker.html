@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3B1 - Automatic Attendance Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #D4E6F1;
+            --accent-color: #F39C12;
+            --present-color: #27AE60;
+            --absent-color: #E74C3C;
+            --light-grey: #f4f4f4;
+            --dark-grey: #333;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--dark-grey);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 { margin: 0; font-size: 1.8em; }
+        header p { margin: 5px 0 0; opacity: 0.9; }
+
+        .tab-controls {
+            display: flex;
+            background: var(--light-grey);
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-controls button {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 15px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab-controls button:hover { background-color: #e9e9e9; }
+        .tab-controls button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .content-area { padding: 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        #no-class-msg, #no-history-msg {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.2em;
+        }
+
+        .lecture-card {
+            display: flex; align-items: center; background: #fff; border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius); margin-bottom: 15px; padding: 15px;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .lecture-card::before {
+            content: ''; position: absolute; left: 0; top: 0; width: 6px; height: 100%;
+            background-color: var(--primary-color); transition: background-color 0.3s ease;
+        }
+        .lecture-card.present::before { background-color: var(--present-color); }
+        .lecture-card.absent::before { background-color: var(--absent-color); }
+        .lecture-info { flex-grow: 1; }
+        .lecture-info .subject { font-size: 1.2em; font-weight: 700; color: var(--dark-grey); }
+        .lecture-info .teacher { color: #555; font-size: 0.9em; }
+        .action-buttons button {
+            border: none; color: #fff; padding: 8px 15px; margin-left: 10px; border-radius: 5px;
+            font-weight: 500; cursor: pointer; min-width: 80px; transition: opacity 0.2s ease;
+        }
+        .action-buttons button.present-btn { background-color: var(--present-color); }
+        .action-buttons button.absent-btn { background-color: var(--absent-color); }
+        
+        /* History View Styling */
+        .history-day { margin-bottom: 25px; }
+        .history-day h3 {
+            background-color: var(--light-grey); padding: 10px; border-radius: 5px;
+            font-size: 1.2em; border-left: 5px solid var(--primary-color);
+        }
+        .history-item { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid #eee; }
+        .history-item.present .status { color: var(--present-color); font-weight: 700; }
+        .history-item.absent .status { color: var(--absent-color); font-weight: 700; }
+        
+        .footer-actions { padding: 15px 20px; background: var(--light-grey); border-top: 1px solid #ddd; text-align: center; }
+        .footer-actions button {
+            border: none; padding: 10px 20px; border-radius: 5px; font-weight: 700; cursor: pointer; margin: 0 10px;
+        }
+        #download-btn { background-color: var(--present-color); color: #fff; }
+        #clear-data-btn { background-color: #c0392b; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Automatic Attendance Tracker</h1>
+            <p>LDRP - Sem 3B - Computer Engineering</p>
+        </header>
+
+        <div class="tab-controls">
+            <button class="tab-btn active" data-tab="today">Today's Schedule</button>
+            <button class="tab-btn" data-tab="history">Full History</button>
+        </div>
+
+        <div class="content-area">
+            <div id="today" class="tab-content active">
+                </div>
+            <div id="history" class="tab-content">
+                </div>
+        </div>
+
+        <div class="footer-actions">
+            <button id="download-btn">Download Full History (CSV)</button>
+            <button id="clear-data-btn">Clear All Saved Data</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data and Maps
+            const teacherMap = { 'RSG': 'Dr. Riya Gohil', 'KPT': 'Dr. Kruti Thakore', 'PM': 'Prof. Pratik Modi', 'SRR': 'Not Listed', 'HT': 'Prof. Himani Trivedi', 'VKP': 'Mr. Vijay Patel', 'AA': 'Prof. Anita Anand', 'JCK': 'Not Listed', 'HGJ': 'Not Listed', 'HC': 'Not Listed', 'NPC': 'Not Listed' };
+            const fullSubjectName = { 'DBMS': 'Database Management Systems', 'DE': 'Digital Electronics', 'ITW': 'IT Workshop', 'DSA': 'Data Structures & Algorithms', 'DM': 'Discrete Mathematics', 'LIBRARY': 'Library Hour' };
+            const timetable = { 1: [{ slot: 1, subject: 'DBMS', teacher: 'RSG' }, { slot: 2, subject: 'DE', teacher: 'KPT' }, { slot: 3, subject: 'DE', teacher: 'KPT', type: 'Lab/Tutorial' }, { slot: 5, subject: 'DM', teacher: 'SRR' }, { slot: 6, subject: 'DSA', teacher: 'HT' }], 2: [{ slot: 1, subject: 'DM', teacher: 'VKP' }, { slot: 2, subject: 'DBMS', teacher: 'RSG' }, { slot: 3, subject: 'DBMS', teacher: 'RSG', type: 'Lab/Tutorial' }, { slot: 5, subject: 'ITW', teacher: 'PM' }, { slot: 6, subject: 'LIBRARY', teacher: '' }], 3: [{ slot: 1, subject: 'DSA', teacher: 'HT' }, { slot: 2, subject: 'DM', teacher: 'SRR' }, { slot: 3, subject: 'ITW', teacher: 'JCK', type: 'Lab/Tutorial' }, { slot: 5, subject: 'DE', teacher: 'KPT' }, { slot: 6, subject: 'LIBRARY', teacher: '' }], 4: [{ slot: 1, subject: 'DSA', teacher: 'HT' }, { slot: 2, subject: 'DE', teacher: 'KPT' }, { slot: 3, subject: 'DSA', teacher: 'HGJ', type: 'Lab/Tutorial' }, { slot: 5, subject: 'DM', teacher: 'SRR/VKP' }, { slot: 6, subject: 'LIBRARY', teacher: '' }], 5: [{ slot: 1, subject: 'DE', teacher: 'KPT' }, { slot: 2, subject: 'DSA', teacher: 'HT' }, { slot: 3, subject: 'DBMS', teacher: 'HC', type: 'Lab/Tutorial' }, { slot: 5, subject: 'DBMS', teacher: 'AA' }, { slot: 6, subject: 'LIBRARY', teacher: '' }], 6: [{ slot: 1, subject: 'DBMS', teacher: 'AA' }, { slot: 2, subject: 'ITW', teacher: 'PM' }, { slot: 3, subject: 'ITW', teacher: 'NPC', type: 'Lab/Tutorial' }], 0: [] };
+
+            // DOM Elements
+            const todayContent = document.getElementById('today');
+            const historyContent = document.getElementById('history');
+            
+            let attendanceDB = {};
+            const DB_KEY = 'my3B1Attendance';
+
+            // --- DATA FUNCTIONS ---
+            function loadData() {
+                const savedData = localStorage.getItem(DB_KEY);
+                attendanceDB = savedData ? JSON.parse(savedData) : {};
+            }
+
+            function saveData() {
+                localStorage.setItem(DB_KEY, JSON.stringify(attendanceDB));
+            }
+
+            // --- RENDER FUNCTIONS ---
+            function renderToday() {
+                const todayIndex = new Date().getDay();
+                const daySchedule = timetable[todayIndex];
+                todayContent.innerHTML = '';
+
+                if (!daySchedule || daySchedule.length === 0) {
+                    todayContent.innerHTML = `<p id="no-class-msg">🎉 No classes today! Enjoy your day!</p>`;
+                    return;
+                }
+
+                const todayDateString = new Date().toISOString().split('T')[0];
+                const todayRecords = attendanceDB[todayDateString] || {};
+
+                daySchedule.forEach(lecture => {
+                    const card = document.createElement('div');
+                    card.className = 'lecture-card';
+                    card.dataset.slot = lecture.slot;
+                    
+                    let subjectTitle = fullSubjectName[lecture.subject] || lecture.subject;
+                    if (lecture.type) subjectTitle += ` (${lecture.type})`;
+                    let teacherName = lecture.teacher.includes('/') ? lecture.teacher : (teacherMap[lecture.teacher] || lecture.teacher);
+
+                    card.innerHTML = `
+                        <div class="lecture-info">
+                            <div class="subject">${subjectTitle}</div>
+                            <div class="teacher">Slot ${lecture.slot} | ${teacherName}</div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="present-btn">Present</button>
+                            <button class="absent-btn">Absent</button>
+                        </div>`;
+                    
+                    const status = todayRecords[lecture.slot];
+                    if (status) card.classList.add(status);
+
+                    todayContent.appendChild(card);
+                });
+            }
+            
+            function renderHistory() {
+                historyContent.innerHTML = '';
+                const dates = Object.keys(attendanceDB).sort().reverse(); // Show most recent first
+
+                if (dates.length === 0) {
+                    historyContent.innerHTML = `<p id="no-history-msg">No saved attendance history yet. Mark your attendance on the 'Today's Schedule' tab to get started!</p>`;
+                    return;
+                }
+
+                dates.forEach(date => {
+                    const dayRecords = attendanceDB[date];
+                    const dayContainer = document.createElement('div');
+                    dayContainer.className = 'history-day';
+                    
+                    const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    dayContainer.innerHTML = `<h3>${formattedDate}</h3>`;
+
+                    Object.keys(dayRecords).sort().forEach(slot => {
+                        const status = dayRecords[slot];
+                        const lectureInfo = findLectureBySlot(new Date(date).getDay(), slot);
+                        let subjectTitle = lectureInfo ? (fullSubjectName[lectureInfo.subject] || lectureInfo.subject) : 'Unknown Lecture';
+
+                        const item = document.createElement('div');
+                        item.className = `history-item ${status}`;
+                        item.innerHTML = `
+                            <span class="subject">Slot ${slot}: ${subjectTitle}</span>
+                            <span class="status">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+                        dayContainer.appendChild(item);
+                    });
+                    historyContent.appendChild(dayContainer);
+                });
+            }
+
+            // --- EVENT HANDLERS ---
+            function handleTabClick(e) {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                const tabId = e.target.dataset.tab;
+                e.target.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+
+                if (tabId === 'history') {
+                    renderHistory();
+                }
+            }
+
+            function handleAttendanceClick(e) {
+                const button = e.target.closest('.present-btn, .absent-btn');
+                if (!button) return;
+
+                const card = button.closest('.lecture-card');
+                const slot = card.dataset.slot;
+                const status = button.classList.contains('present-btn') ? 'present' : 'absent';
+                const todayDateString = new Date().toISOString().split('T')[0];
+
+                if (!attendanceDB[todayDateString]) {
+                    attendanceDB[todayDateString] = {};
+                }
+                attendanceDB[todayDateString][slot] = status;
+                saveData();
+
+                card.classList.remove('present', 'absent');
+                card.classList.add(status);
+            }
+            
+            function handleDownload() {
+                if (Object.keys(attendanceDB).length === 0) {
+                    alert('No attendance data has been saved yet!');
+                    return;
+                }
+
+                let csvContent = "Date,Day,Slot,Subject,Status\n";
+                const sortedDates = Object.keys(attendanceDB).sort();
+
+                sortedDates.forEach(date => {
+                    const dayOfWeek = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayRecords = attendanceDB[date];
+                    Object.keys(dayRecords).sort().forEach(slot => {
+                        const status = dayRecords[slot];
+                        const lectureInfo = findLectureBySlot(new Date(date).getDay(), slot);
+                        let subject = lectureInfo ? (fullSubjectName[lectureInfo.subject] || lectureInfo.subject) : 'N/A';
+                        
+                        csvContent += `${date},${dayOfWeek},${slot},"${subject}","${status}"\n`;
+                    });
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.setAttribute("href", URL.createObjectURL(blob));
+                link.setAttribute("download", `Full_Attendance_Report.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            function handleClearData() {
+                if (confirm('ARE YOU SURE?\n\nThis will permanently delete all your saved attendance data from this browser. This action cannot be undone.')) {
+                    localStorage.removeItem(DB_KEY);
+                    attendanceDB = {};
+                    renderToday();
+                    renderHistory();
+                    alert('All saved attendance data has been cleared.');
+                }
+            }
+
+            // --- UTILITY ---
+            function findLectureBySlot(dayIndex, slot) {
+                if (!timetable[dayIndex]) return null;
+                return timetable[dayIndex].find(lec => lec.slot == slot);
+            }
+            
+            // --- INITIALIZATION ---
+            loadData();
+            renderToday();
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', handleTabClick));
+            todayContent.addEventListener('click', handleAttendanceClick);
+            document.getElementById('download-btn').addEventListener('click', handleDownload);
+            document.getElementById('clear-data-btn').addEventListener('click', handleClearData);
+        });
+    </script>
+</body>
+</html>
